@@ -2881,11 +2881,22 @@ body, p, input, select, button {
 }
 
 /* ==========================================================================
-   RESPONSIVE DESIGN BREAKPOINTS
+   RESPONSIVE DESIGN BREAKPOINTS & MOBILE OPTIMIZATIONS
    ========================================================================== */
+
+/* Universal Touch & Mobile Enhancements */
+button, input, select, textarea, a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
 
 @media (max-width: 1024px) {
   .gov-dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .gov-dashboard-grid-no-map {
     grid-template-columns: 1fr;
   }
 
@@ -2898,28 +2909,181 @@ body, p, input, select, button {
 
   .gov-main-header {
     flex-wrap: wrap;
+    padding: 10px 16px;
+    gap: 12px;
   }
 
   .header-primary-nav {
     order: 3;
     width: 100%;
     overflow-x: auto;
-    padding-bottom: 4px;
+    white-space: nowrap;
+    padding-bottom: 6px;
+    display: flex;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .header-primary-nav::-webkit-scrollbar {
+    display: none;
   }
 }
 
-@media (max-width: 640px) {
-  .gov-summary-strip {
+@media (max-width: 768px) {
+  .gov-dashboard-main {
+    padding: 12px 10px;
+  }
+
+  .gov-page-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
+  }
+
+  .page-header-meta {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  /* Mobile Summary Grid */
+  .gov-summary-strip {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px 12px;
   }
 
   .summary-divider {
     display: none;
   }
 
+  .summary-item {
+    background: rgba(15, 23, 42, 0.4);
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-light, rgba(255, 255, 255, 0.08));
+    justify-content: space-between;
+  }
+
+  .summary-number {
+    font-size: 18px;
+  }
+
+  .summary-label {
+    font-size: 11px;
+  }
+
+  /* Map Container height for Phones */
+  .leaflet-gis-map {
+    min-height: 340px !important;
+    height: 340px !important;
+  }
+
+  .tactical-map-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  /* Timeline Slider */
+  .forecast-steps-container {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+
+  .forecast-steps-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .forecast-step-btn {
+    flex-shrink: 0;
+    min-width: 72px;
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+
+  /* Login Card Phone Optimization */
+  .gov-login-card {
+    padding: 20px 14px;
+    margin: 12px;
+    width: calc(100% - 24px);
+    max-width: 440px;
+  }
+
+  .role-tabs-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 3px;
+  }
+
+  .role-tab {
+    padding: 8px 4px;
+    font-size: 11px;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .role-tab svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Modals & Drawers on Phone */
+  .gov-modal-overlay {
+    padding: 10px;
+    align-items: flex-end;
+  }
+
+  .gov-modal-container {
+    width: 100%;
+    max-width: 100%;
+    max-height: 88vh;
+    border-radius: 16px 16px 0 0;
+    padding: 16px;
+  }
+
   .gov-drawer-container {
     width: 100%;
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+  }
+
+  /* Citizen Page phone grid */
+  .citizen-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .gov-btn-primary, .gov-btn-secondary, .gov-btn-danger {
+    min-height: 42px;
+    font-size: 13px;
   }
 }
+
+@media (max-width: 480px) {
+  .gov-summary-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .login-title {
+    font-size: 1.25rem;
+  }
+
+  .gov-page-title {
+    font-size: 1.2rem;
+  }
+
+  .leaflet-gis-map {
+    min-height: 300px !important;
+    height: 300px !important;
+  }
+}
+
