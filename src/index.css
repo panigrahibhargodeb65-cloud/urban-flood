@@ -2947,7 +2947,7 @@ button, input, select, textarea, a {
     justify-content: flex-start;
   }
 
-  /* Mobile Summary Grid */
+  /* Mobile summary strip */
   .gov-summary-strip {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -2975,10 +2975,11 @@ button, input, select, textarea, a {
     font-size: 11px;
   }
 
-  /* Map Container height for Phones */
+  /* Map Container height for Phones: 60-70vh */
   .leaflet-gis-map {
-    min-height: 340px !important;
-    height: 340px !important;
+    min-height: 360px !important;
+    height: 65vh !important;
+    max-height: 520px !important;
   }
 
   .tactical-map-topbar {
@@ -2987,6 +2988,11 @@ button, input, select, textarea, a {
     gap: 6px;
     padding: 6px 10px;
     font-size: 11px;
+  }
+
+  .leaflet-popup-content-wrapper {
+    max-width: 270px !important;
+    font-size: 12px !important;
   }
 
   /* Timeline Slider */
@@ -3005,16 +3011,18 @@ button, input, select, textarea, a {
   .forecast-step-btn {
     flex-shrink: 0;
     min-width: 72px;
-    padding: 6px 8px;
-    font-size: 11px;
+    padding: 8px 10px;
+    font-size: 12px;
+    min-height: 44px;
   }
 
   /* Login Card Phone Optimization */
   .gov-login-card {
     padding: 20px 14px;
-    margin: 12px;
-    width: calc(100% - 24px);
+    margin: 12px auto;
+    width: 92vw;
     max-width: 440px;
+    box-sizing: border-box;
   }
 
   .role-tabs-container {
@@ -3028,6 +3036,7 @@ button, input, select, textarea, a {
     font-size: 11px;
     flex-direction: column;
     gap: 3px;
+    min-height: 44px;
   }
 
   .role-tab svg {
@@ -3035,24 +3044,29 @@ button, input, select, textarea, a {
     height: 14px;
   }
 
-  /* Modals & Drawers on Phone */
+  /* Modals & Drawers on Phone: 92-96vw width, max-height 90vh */
   .gov-modal-overlay {
     padding: 10px;
     align-items: flex-end;
   }
 
   .gov-modal-container {
-    width: 100%;
-    max-width: 100%;
-    max-height: 88vh;
-    border-radius: 16px 16px 0 0;
-    padding: 16px;
+    width: 94vw !important;
+    max-width: 94vw !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    border-radius: 16px 16px 0 0 !important;
+    padding: 16px !important;
+    box-sizing: border-box;
   }
 
   .gov-drawer-container {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    border-radius: 16px 16px 0 0 !important;
+    box-sizing: border-box;
   }
 
   /* Citizen Page phone grid */
@@ -3061,9 +3075,25 @@ button, input, select, textarea, a {
     gap: 10px;
   }
 
-  .gov-btn-primary, .gov-btn-secondary, .gov-btn-danger {
-    min-height: 42px;
+  /* Touch Targets (Minimum 44px height) */
+  .gov-btn-primary, .gov-btn-secondary, .gov-btn-danger, .gov-logout-btn {
+    min-height: 44px;
     font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Responsive Tables Wrapper */
+  .gov-table-wrapper, .table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 12px;
+  }
+
+  .gov-table-wrapper table {
+    min-width: 580px;
   }
 }
 
@@ -3078,12 +3108,151 @@ button, input, select, textarea, a {
   }
 
   .gov-page-title {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .brand-primary-title {
+    font-size: 1rem;
   }
 
   .leaflet-gis-map {
-    min-height: 300px !important;
-    height: 300px !important;
+    min-height: 320px !important;
+    height: 60vh !important;
   }
 }
+
+/* ==========================================================================
+   DESKTOP VS MOBILE HEADER CONTROL CLASSES
+   ========================================================================== */
+.mobile-header-controls {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-hamburger-btn {
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  color: #0F172A;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.mobile-role-badge {
+  font-size: 10px;
+  padding: 3px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mobile-nav-menu-drawer {
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  animation: slideDownNav 0.2s ease-out;
+}
+
+@keyframes slideDownNav {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-nav-links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mobile-nav-item {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  color: #1E293B;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.mobile-nav-item.active {
+  background: #0F172A;
+  color: #FFFFFF;
+  border-color: #0284C7;
+}
+
+.mobile-nav-user-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.mobile-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.notif-dropdown-popup {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  width: 320px;
+  max-width: 90vw;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  z-index: 9999;
+  padding: 12px;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav-only,
+  .desktop-utilities-only {
+    display: none !important;
+  }
+
+  .mobile-header-controls {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-header-controls,
+  .mobile-nav-menu-drawer {
+    display: none !important;
+  }
+}
+
+/* Global Prevent Body Horizontal Scroll & Safe Area Support */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 

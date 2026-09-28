@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { LogOut, Lock, Bell, Check, Activity } from 'lucide-react';
+import { LogOut, Lock, Bell, Check, Activity, Menu, X } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
 export default function GlobalHeader({ activeNav, setActiveNav }) {
   const { auth, logout, setActiveModal, notifications = [], markNotificationAsRead } = useApp();
   const currentRole = auth?.role || 'government';
   const user = auth?.user || {};
-  const [showNotifDropdown, setShowNotifDropdown] = React.useState(false);
+  const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Role-filtered notifications
   const roleNotifications = notifications.filter(
@@ -47,6 +48,7 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
   const navItems = navConfig[currentRole] || navConfig.government;
 
   const handleNavClick = (id) => {
+    setIsMobileMenuOpen(false);
     if (currentRole === 'citizen') {
       if (id === 'saferoute') {
         setActiveModal('safeRoute');
@@ -75,9 +77,9 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
   };
 
   const getRoleBadgeLabel = () => {
-    if (currentRole === 'government') return 'Government Control Room • Logged in';
-    if (currentRole === 'admin') return 'Super-Administrator • Logged in';
-    return 'Citizen • Logged in';
+    if (currentRole === 'government') return 'Gov Control Room';
+    if (currentRole === 'admin') return 'Super-Admin';
+    return 'Citizen';
   };
 
   return (
@@ -86,9 +88,9 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
       <div className="gov-top-strip">
         <div className="top-strip-inner">
           <span className="strip-text">
-            <strong>SIH 2026</strong> &nbsp;|&nbsp; Urban Flood Nowcasting + Response Intelligence &nbsp;|&nbsp; Problem Statement 26085
+            <strong>SIH 2026</strong> &nbsp;|&nbsp; Urban Flood Nowcasting + Response Intelligence &nbsp;|&nbsp; PS 26085
           </span>
-          <span className="strip-right-tag">Physics-First 1D/2D Intelligence &amp; Risk-Aware Routing</span>
+          <span className="strip-right-tag">Physics-First 1D/2D Intelligence</span>
         </div>
       </div>
 
@@ -99,13 +101,13 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
             <img src={logoImg} alt="Urban Flood Intelligence System Logo" className="brand-logo-img" />
           </div>
           <div className="brand-text-group">
-            <h1 className="brand-primary-title">Urban Flood Nowcasting + Response Intelligence</h1>
-            <p className="brand-secondary-subtitle">0–3 Hour Street-Level Risk, Hotspots &amp; Risk-Aware Routing</p>
+            <h1 className="brand-primary-title">Urban Flood Nowcasting</h1>
+            <p className="brand-secondary-subtitle">0–3 Hour Street-Level Risk &amp; Hotspots</p>
           </div>
         </div>
 
-        {/* Role-Specific Navigation Links */}
-        <nav className="header-primary-nav" aria-label="Role Navigation">
+        {/* Desktop Navigation Links */}
+        <nav className="header-primary-nav desktop-nav-only" aria-label="Role Navigation">
           {navItems.map((item) => {
             const isActive = activeNav === item.id || (currentRole === 'citizen' && item.id === 'risk' && (activeNav === 'dashboard' || activeNav === 'risk'));
             return (
@@ -121,8 +123,8 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
         </nav>
 
         {/* Right Header Utilities & Read-Only Role Indicator */}
-        <div className="header-right-utilities">
-          {/* Notification Bell with Badge Counter */}
+        <div className="header-right-utilities desktop-utilities-only">
+          {/* Notification Bell */}
           <div style={{ position: 'relative' }}>
             <button
               className="gov-btn-secondary"
@@ -135,7 +137,7 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
                 gap: '6px',
                 fontSize: '12px',
               }}
-              title="System Alerts & Directives"
+              aria-label="System Alerts"
             >
               <Bell size={15} style={{ color: unreadCount > 0 ? '#BE123C' : 'var(--text-secondary)' }} />
               {unreadCount > 0 && (
@@ -156,29 +158,16 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
 
             {/* Notifications Dropdown Popup */}
             {showNotifDropdown && (
-              <div
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: '110%',
-                  width: '340px',
-                  background: '#FFFFFF',
-                  border: '1px solid #CBD5E1',
-                  borderRadius: '6px',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-                  zIndex: 9999,
-                  padding: '12px',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', borderBottom: '1px solid #E2E8F0', pb: '6px' }}>
-                  <strong style={{ fontSize: '13px', color: '#0F172A' }}>Notifications &amp; Directives</strong>
+              <div className="notif-dropdown-popup">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', borderBottom: '1px solid #E2E8F0', paddingBottom: '6px' }}>
+                  <strong style={{ fontSize: '13px', color: '#0F172A' }}>Directives &amp; Alerts</strong>
                   <span style={{ fontSize: '11px', color: '#64748B' }}>{roleNotifications.length} alerts</span>
                 </div>
 
                 <div style={{ maxHeight: '280px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {roleNotifications.length === 0 ? (
                     <div style={{ fontSize: '12px', color: '#64748B', textAlign: 'center', padding: '12px' }}>
-                      No unread system directives.
+                      No unread directives.
                     </div>
                   ) : (
                     roleNotifications.map((notif) => (
@@ -200,7 +189,7 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
                           {notif.message}
                         </div>
                         <div style={{ fontSize: '10px', color: '#94A3B8', marginTop: '4px', display: 'flex', justifyContent: 'space-between' }}>
-                          <span>{notif.time} • {notif.sender}</span>
+                          <span>{notif.time}</span>
                           {!notif.read && <span style={{ color: '#0284C7', fontWeight: 700 }}>● New</span>}
                         </div>
                       </div>
@@ -212,31 +201,67 @@ export default function GlobalHeader({ activeNav, setActiveNav }) {
           </div>
 
           {/* READ-ONLY Session Indicator */}
-          <div className="gov-role-read-only-badge" title="Role locked for current authenticated session">
+          <div className="gov-role-read-only-badge" title="Role locked for current session">
             <Lock size={12} className="lock-icon" />
             <span className="role-read-only-text">{getRoleBadgeLabel()}</span>
-          </div>
-
-          <div className="system-status-indicator">
-            <span className="status-dot-green"></span>
-            <span className="status-status-text">Physics Engine Online</span>
-          </div>
-
-          <div className="user-profile-summary">
-            <span className="user-name">{user.name || 'Control Room Officer'}</span>
           </div>
 
           {/* Session Logout Button */}
           <button
             className="gov-logout-btn"
             onClick={logout}
-            title="Logout of session and clear role"
+            title="Logout of session"
           >
             <LogOut size={14} />
             <span>Logout</span>
           </button>
         </div>
+
+        {/* Mobile Header Controls */}
+        <div className="mobile-header-controls">
+          <div className="gov-role-read-only-badge mobile-role-badge">
+            <Lock size={10} />
+            <span>{getRoleBadgeLabel()}</span>
+          </div>
+
+          <button
+            className="mobile-hamburger-btn"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Drawer Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="mobile-nav-menu-drawer">
+          <div className="mobile-nav-links-list">
+            {navItems.map((item) => {
+              const isActive = activeNav === item.id || (currentRole === 'citizen' && item.id === 'risk' && (activeNav === 'dashboard' || activeNav === 'risk'));
+              return (
+                <button
+                  key={item.id}
+                  className={`mobile-nav-item ${isActive ? 'active' : ''}`}
+                  onClick={() => handleNavClick(item.id)}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mobile-nav-user-bar">
+            <span className="mobile-user-name">👤 {user.name || 'User'}</span>
+            <button className="gov-logout-btn full-width" onClick={logout}>
+              <LogOut size={14} />
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
+
